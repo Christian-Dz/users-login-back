@@ -1,16 +1,16 @@
-require("dotenv").config();  // dependencia que ayuda a manejar variables de entorno
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const port = process.env.PORT;
 
-const http = require("http");
+app.use(express.static("public")); // Middleware de archivos estaticos
 
-function requestController() {
-  // logica de nuestro servidor
-  console.log("recibimos una nueva request");
-}
+// Setting the routes
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
 
-const server = http.createServer(requestController);
-
-const PORT = process.env.PORT;  //
-
-server.listen(PORT, function () {
-  console.log("Aplicacion corriendo en puerto: " + PORT);
+// Listening the app in a port
+app.listen(port, () => {
+  console.log(`Listening in port: ${port}`);
 });
