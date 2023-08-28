@@ -100,9 +100,6 @@ app.delete("/api/tasks/:id", (req, res) => {
     });
 });
 
-
-
-
 // Listening the app in a port
 app.listen(port, () => {
   console.log(`Listening in port: ${port}`);
