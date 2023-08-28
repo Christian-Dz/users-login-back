@@ -29,7 +29,16 @@ app.use(express.json()); // Middleware para parsear el body de las requests
 
 // Setting the routes
 app.get("/api/tasks", (req, res) => {
-  res.send("hello world");
+  Task.find().then((tasks) => {
+    res
+      .status(200)
+      .json({ ok: true, data: tasks });
+  })
+    .catch((err) => {
+      res
+        .status(400)
+        .json({ ok: false, message: "Hubo un problema en la peticion GET" });
+  })
 });
 
 app.post("/api/tasks", (req, res) => {
@@ -49,6 +58,50 @@ app.post("/api/tasks", (req, res) => {
   })
   
 });
+
+app.put("/api/tasks/:id", (req, res) => {
+  const body = req.body;
+  const id = req.params.id;
+  Task.findByIdAndUpdate(id, {
+    name: body.text
+  })
+    .then((updatedTask) => {
+      res
+        .status(200)
+        .json({
+          ok: true,
+          message: "Tarea actualizada con el metodo PUT",
+          data: updatedTask,
+        });
+    })
+    .catch((err) => {
+      res
+        .status(400)
+        .json({
+          ok: false,
+          message: "Error al editar la tarea con el metodo PUT",
+        });
+    });
+});
+
+app.delete("/api/tasks/:id", (req, res) => {
+  const id = req.params.id;
+  Task.findByIdAndRemove(id)
+    .then((deletedTask) => {
+      res.status(200).json({ ok: true, data: deletedTask });
+    })
+    .catch((err) => {
+      res
+        .status(400)
+        .json({
+          ok: false,
+          message: "Error al eliminar la tarea con el metodo DELETE",
+        });
+    });
+});
+
+
+
 
 // Listening the app in a port
 app.listen(port, () => {
